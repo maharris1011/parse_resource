@@ -662,13 +662,13 @@ module ParseResource
       v
     end
 
-    def self.has_many_relations
-      @has_many_relations
-    end
+    # def self.has_many_relations
+    #   @has_many_relations
+    # end
 
-    def self.belongs_to_relations
-      @belongs_to_relations
-    end
+    # def self.belongs_to_relations
+    #   @belongs_to_relations
+    # end
 
 
     # aliasing for idiomatic Ruby
