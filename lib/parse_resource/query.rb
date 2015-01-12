@@ -117,7 +117,7 @@ class Query
     params.merge!({:limit => criteria[:limit].to_json}) if criteria[:limit]
     params.merge!({:skip => criteria[:skip].to_json}) if criteria[:skip]
     params.merge!({:count => criteria[:count].to_json}) if criteria[:count]
-    params.merge!({:include => criteria[:include].join(',')}) if not criteria[:include].empty?
+    params.merge!({:include => criteria[:include].join(',')}) if criteria[:include]
     params.merge!({:order => criteria[:order]}) if criteria[:order]
 
     return chunk_results(params) if criteria[:chunk]
