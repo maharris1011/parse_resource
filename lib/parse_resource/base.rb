@@ -97,7 +97,7 @@ module ParseResource
     # @param [Hash] options Added so that you can specify :class_name => '...'. It does nothing at all, but helps you write self-documenting code.
     def self.belongs_to(parent, options = {})
       field(parent)
-      @@belongs_to_relations << parent
+      @belongs_to_relations << parent
     end
 
     # Creates setter and getter in order access the specified relation for this Model
