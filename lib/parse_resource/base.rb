@@ -22,13 +22,11 @@ module ParseResource
     #    fields :title, :author, :body
     #  end
 
-    class << self
-      attr_accessor :has_many_relations
-      attr_accessor :belongs_to_relations
-    end
+    class_attribute :has_many_relations
+    class_attribute :belongs_to_relations
 
-    @has_many_relations = []
-    @belongs_to_relations = []
+    Base.has_many_relations = []
+    Base.belongs_to_relations = []
 
     include ActiveModel::Validations
     include ActiveModel::Validations::Callbacks
@@ -97,7 +95,7 @@ module ParseResource
     # @param [Hash] options Added so that you can specify :class_name => '...'. It does nothing at all, but helps you write self-documenting code.
     def self.belongs_to(parent, options = {})
       field(parent)
-      @belongs_to_relations << parent
+      self.belongs_to_relations << parent
     end
 
     # Creates setter and getter in order access the specified relation for this Model
@@ -105,7 +103,7 @@ module ParseResource
     # @param [Hash] options Added so that you can specify :class_name => '...'. It does nothing at all, but helps you write self-documenting code.
     def self.has_many(parent, options = {})
       field(parent)
-      @has_many_relations << parent
+      self.has_many_relations << parent
     end
 
     def to_pointer
@@ -471,7 +469,7 @@ module ParseResource
     def merge_relations
       # KK 11-17-2012 The response after creation does not return full description of
       # the object nor the relations it contains. Make another request here.
-      if @has_many_relations.map { |relation| relation.to_s.to_sym }
+      if self.has_many_relations.map { |relation| relation.to_s.to_sym }
         #todo: make this a little smarter by checking if there are any Pointer objects in the objects attributes.
         @attributes = self.class.to_s.constantize.where(:objectId => @attributes["objectId"]).first.attributes
       end
@@ -637,7 +635,7 @@ module ParseResource
         end #todo: support other types https://www.parse.com/docs/rest#objects-types
       else
         #relation will assign itself if an array, this will add to unsave_attributes
-         if @has_many_relations.index(k.to_s.to_sym)
+         if self.has_many_relations.index(k.to_s.to_sym)
           if attrs[k].nil?
             result = nil
           else
@@ -661,15 +659,6 @@ module ParseResource
       @attributes[k.to_s] = v
       v
     end
-
-    # def self.has_many_relations
-    #   @has_many_relations
-    # end
-
-    # def self.belongs_to_relations
-    #   @belongs_to_relations
-    # end
-
 
     # aliasing for idiomatic Ruby
     def id; get_attribute("objectId") rescue nil; end
