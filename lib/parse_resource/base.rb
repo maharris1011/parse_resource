@@ -25,9 +25,6 @@ module ParseResource
     class_attribute :has_many_relations
     class_attribute :belongs_to_relations
 
-    Base.has_many_relations = []
-    Base.belongs_to_relations = []
-
     include ActiveModel::Validations
     include ActiveModel::Validations::Callbacks
     include ActiveModel::Conversion
@@ -46,6 +43,9 @@ module ParseResource
     # @return [ParseResource::Base] an object that subclasses `Parseresource::Base`
     def initialize(attributes = {}, new=true)
       #attributes = HashWithIndifferentAccess.new(attributes)
+
+      self.has_many_relations ||= []
+      self.belongs_to_relations ||= []
 
       if new
         @unsaved_attributes = attributes
@@ -95,6 +95,7 @@ module ParseResource
     # @param [Hash] options Added so that you can specify :class_name => '...'. It does nothing at all, but helps you write self-documenting code.
     def self.belongs_to(parent, options = {})
       field(parent)
+      self.belongs_to_relations ||= []
       self.belongs_to_relations << parent
     end
 
@@ -103,6 +104,7 @@ module ParseResource
     # @param [Hash] options Added so that you can specify :class_name => '...'. It does nothing at all, but helps you write self-documenting code.
     def self.has_many(parent, options = {})
       field(parent)
+      self.has_many_relations ||= []
       self.has_many_relations << parent
     end
 
